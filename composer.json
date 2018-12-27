@@ -1,0 +1,11 @@
+{
+    "name": "offbeatwp/acf-sitesettings",
+    "type": "offbeatwp-service",
+    "authors": [
+        {
+            "name": "Chris Schrijver",
+            "email": "chris@raow.nl"
+        }
+    ],
+    "require": {}
+}
