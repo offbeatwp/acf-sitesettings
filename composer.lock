@@ -1,0 +1,49 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "5c5314f9b4e7c8da9b4f29bd7da59c6e",
+    "packages": [
+        {
+            "name": "offbeatwp/acf-core",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/offbeatwp/acf-core.git",
+                "reference": "e222ef6008c3073bbbdc14ab2e1dd128d5a654d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/offbeatwp/acf-core/zipball/e222ef6008c3073bbbdc14ab2e1dd128d5a654d3",
+                "reference": "e222ef6008c3073bbbdc14ab2e1dd128d5a654d3",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OffbeatWP\\AcfCore\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Chris Schrijver",
+                    "email": "chris@raow.nl"
+                }
+            ],
+            "time": "2018-12-27T18:45:51+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "offbeatwp/acf-core": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

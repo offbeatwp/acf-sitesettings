@@ -12,5 +12,7 @@
             "OffbeatWP\\AcfSiteSettings\\": "src"
         }
     },
-    "require": {}
+    "require": {
+        "offbeatwp/acf-core": "dev-master"
+    }
 }
