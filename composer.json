@@ -7,5 +7,10 @@
             "email": "chris@raow.nl"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "OffbeatWP\\AcfSiteSettings": "src"
+        }
+    },
     "require": {}
 }
