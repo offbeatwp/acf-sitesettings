@@ -1,5 +1,7 @@
 {
     "name": "offbeatwp/acf-sitesettings",
+    "description": "Use ACF for OffbeatWP's site settings",
+    "license": "MIT",
     "type": "offbeatwp-service",
     "authors": [
         {
