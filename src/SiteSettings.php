@@ -1,12 +1,14 @@
 <?php
 namespace OffbeatWP\AcfSiteSettings;
 
-use OffbeatWP\SiteSettings\AbstractSiteSettings;
 use OffbeatWP\AcfCore\FieldsMapper;
+use OffbeatWP\SiteSettings\AbstractSiteSettings;
 
-class SiteSettings extends AbstractSiteSettings {
-
+class SiteSettings extends AbstractSiteSettings
+{
     const ID = 'site-settings';
+
+    protected $settings;
 
     public function register()
     {
@@ -16,7 +18,7 @@ class SiteSettings extends AbstractSiteSettings {
                 'menu_title' => 'Site Settings',
                 'menu_slug'  => self::ID,
                 'capability' => 'manage_options',
-                'redirect'   => true
+                'redirect'   => true,
             ));
         }
 
@@ -27,7 +29,9 @@ class SiteSettings extends AbstractSiteSettings {
 
     public function convertPostObject($value, $post_id, $field)
     {
-        if($field['return_format'] != 'object' || empty($value)) return $value;
+        if ($field['return_format'] != 'object' || empty($value)) {
+            return $value;
+        }
 
         foreach ($value as &$postObject) {
             $postObject = new \OffbeatWP\Content\Post($postObject);
@@ -38,24 +42,26 @@ class SiteSettings extends AbstractSiteSettings {
 
     public function addSection($class)
     {
-        if (!is_admin() || (wp_doing_ajax() && !preg_match('/^acf/', $_REQUEST['action'])) || !class_exists($class) || !function_exists('acf_add_options_sub_page')) {
+        if (!class_exists($class) || !function_exists('acf_add_options_sub_page')) {
             return null;
         }
 
         $sectionConfig = container()->make($class);
-        
-        $priority = 10;
-        if (defined("{$class}::PRIORITY")) $priority = $class::PRIORITY;
 
-        add_action('acf_site_settings', function () use ($sectionConfig, $class) {            
-            $title = $sectionConfig->title();
+        $priority = 10;
+        if (defined("{$class}::PRIORITY")) {
+            $priority = $class::PRIORITY;
+        }
+
+        add_action('acf_site_settings', function () use ($sectionConfig, $class) {
+            $title       = $sectionConfig->title();
             $subMenuSlug = self::ID . '-' . $sectionConfig::ID;
 
             acf_add_options_sub_page([
-                'page_title'    => $title,
-                'menu_title'    => $title,
-                'parent_slug'   => self::ID,
-                'menu_slug'     => $subMenuSlug,
+                'page_title'  => $title,
+                'menu_title'  => $title,
+                'parent_slug' => self::ID,
+                'menu_slug'   => $subMenuSlug,
             ]);
 
             if (method_exists($sectionConfig, 'fields')) {
@@ -94,7 +100,65 @@ class SiteSettings extends AbstractSiteSettings {
 
     public function get($key)
     {
-        return get_field($key, 'option');
+        $return   = null;
+        $settings = $this->getSettings();
+
+        if (isset($settings[$key])) {
+            $return = $settings[$key];
+        } elseif (strpos($key, '.') !== false) {
+            foreach (explode('.', $key) as $var) {
+                if (isset($settings[$var])) {
+                    $settings = $settings[$var];
+                } else {
+                    return null;
+                }
+            }
+
+            $return = $settings;
+        }
+
+        return $return;
+    }
+
+    public function fetchSettings()
+    {
+        $settings = (array) get_fields('option');
+        $settings = $this->normalizeSettings($settings);
+
+        return $settings;
+    }
+
+    public function normalizeSettings($settings)
+    {
+        if (is_array($settings)) {
+            foreach ($settings as $settingKey => $setting) {
+                $field = get_field_object($settingKey, 'option');
+
+                if (!$field) {
+                    continue;
+                }
+
+                switch ($field['type']) {
+                    case 'group':
+                        if (is_array($settings[$settingKey])) {
+                            $settings = array_merge($settings, $settings[$settingKey]);
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        return $settings;
+    }
+
+    public function getSettings()
+    {
+        if (!$this->settings) {
+            $this->settings = $this->fetchSettings();
+        }
+
+        return $this->settings;
     }
 
     public function update($key, $value)
@@ -102,7 +166,8 @@ class SiteSettings extends AbstractSiteSettings {
         return update_field($key, $value, 'option');
     }
 
-    public function registerAcfSiteSettings() {
+    public function registerAcfSiteSettings()
+    {
         do_action('acf_site_settings');
     }
 }
