@@ -12,11 +12,11 @@ Next add the following line to your `config/services.php` file:
 OffbeatWP\AcfSiteSettings\Service::class,
 ```
 
-## Adding a section
+## Adding a page
 
-A section is an subpage with settings.
+A page is an subpage with settings.
 
-You can register a section by injecting the SiteSetting contract to your service and run the `addPage` method, like:
+You can register a page by injecting the SiteSetting contract to your service and run the `addPage` method, like:
 
 ```php
 <?php
