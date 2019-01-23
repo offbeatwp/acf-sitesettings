@@ -16,7 +16,7 @@ OffbeatWP\AcfSiteSettings\Service::class,
 
 A section is an subpage with settings.
 
-You can register a section by injecting the SiteSetting contract to your service and run the `addSection` method, like:
+You can register a section by injecting the SiteSetting contract to your service and run the `addPage` method, like:
 
 ```php
 <?php
@@ -30,12 +30,12 @@ class ServiceScripts extends AbstractService
 
     public function register(SiteSettings $settings)
     {
-        $settings->addSection(\OffbeatWP\SiteSettings\SettingsScripts::class);
+        $settings->addPage(\OffbeatWP\SiteSettings\SettingsScripts::class);
     }
 }
 ```
 
-The `addSection` method accepts a class. A Settings class looks like this:
+The `addPage` method accepts a class. A Settings class looks like this:
 
 ```php
 <?php
@@ -51,37 +51,17 @@ class SettingsScripts
         return __('Scripts', 'raow');
     }
 
-    public function fields()
+    public function form()
     {
-        return [[
-            'id'     => 'scripts',
-            'title'  => 'Scripts',
-            'fields' => [
-                [
-                    'name'        => 'scripts_head',
-                    'label'       => 'Head',
-                    'type'        => 'textarea',
-                    'default'     => '',
-                    'placeholder' => '',
-                ],
-                [
-                    'name'        => 'scripts_open_body',
-                    'label'       => 'Body open',
-                    'type'        => 'textarea',
-                    'default'     => '',
-                    'placeholder' => '',
-                ],
-                [
-                    'name'        => 'scripts_footer',
-                    'label'       => 'Footer',
-                    'type'        => 'textarea',
-                    'default'     => '',
-                    'placeholder' => '',
-                ],
-            ],
-        ],
-        ];
+        $form = new \OffbeatWP\Form\Form();
+
+        $form ->addField(\OffbeatWP\Form\Fields\TextArea::make('scripts_head', 'Head'));
+        $form ->addField(\OffbeatWP\Form\Fields\TextArea::make('scripts_open_body', 'Body open'));
+        $form ->addField(\OffbeatWP\Form\Fields\TextArea::make('scripts_footer', 'Footer'));
+
+        return $form;
     }
 }
 ```
 
+Read more about [Forms](basics__forms.md)

@@ -40,22 +40,22 @@ class SiteSettings extends AbstractSiteSettings
         return $value;
     }
 
-    public function addSection($class)
+    public function addPage($class)
     {
         if (!class_exists($class) || !function_exists('acf_add_options_sub_page')) {
             return null;
         }
 
-        $sectionConfig = container()->make($class);
+        $pageConfig = container()->make($class);
 
         $priority = 10;
         if (defined("{$class}::PRIORITY")) {
             $priority = $class::PRIORITY;
         }
 
-        add_action('acf_site_settings', function () use ($sectionConfig, $class) {
-            $title       = $sectionConfig->title();
-            $subMenuSlug = self::ID . '-' . $sectionConfig::ID;
+        add_action('acf_site_settings', function () use ($pageConfig, $class) {
+            $title       = $pageConfig->title();
+            $subMenuSlug = self::ID . '-' . $pageConfig::ID;
 
             acf_add_options_sub_page([
                 'page_title'  => $title,
@@ -64,11 +64,11 @@ class SiteSettings extends AbstractSiteSettings
                 'menu_slug'   => $subMenuSlug,
             ]);
 
-            if (method_exists($sectionConfig, 'fields')) {
-                $fields = $sectionConfig->fields($subMenuSlug);
+            if (method_exists($pageConfig, 'form')) {
+                $form = $pageConfig->form();
 
-                if (is_array($fields)) {
-                    $fieldsMapper = new FieldsMapper($fields);
+                if (is_array($form)) {
+                    $fieldsMapper = new FieldsMapper($form);
                     $mappedFields = $fieldsMapper->map();
 
                     acf_add_local_field_group(array(
