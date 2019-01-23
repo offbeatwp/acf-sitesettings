@@ -67,7 +67,7 @@ class SiteSettings extends AbstractSiteSettings
             if (method_exists($pageConfig, 'form')) {
                 $form = $pageConfig->form();
 
-                if (is_array($form)) {
+                if ($form instanceof \OffbeatWP\Form\Form) {
                     $fieldsMapper = new FieldsMapper($form);
                     $mappedFields = $fieldsMapper->map();
 
