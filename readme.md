@@ -64,4 +64,4 @@ class SettingsScripts
 }
 ```
 
-Read more about [Forms](basics__forms.md)
+Read more about [Forms](/offbeatwp/documentaion/basics__forms.md)
