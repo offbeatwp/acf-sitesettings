@@ -34,7 +34,7 @@ class SiteSettings extends AbstractSiteSettings
         }
 
         foreach ($value as &$postObject) {
-            $postObject = new \OffbeatWP\Content\Post($postObject);
+            $postObject = offbeat('post')->get($postObject);
         }
 
         return $value;
