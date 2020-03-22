@@ -13,5 +13,8 @@
         "psr-4": {
             "OffbeatWP\\AcfSiteSettings\\": "src"
         }
+    },
+    "require": {
+        "offbeatwp/acf-core": "dev-master"
     }
 }
