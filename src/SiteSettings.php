@@ -17,7 +17,7 @@ class SiteSettings extends AbstractSiteSettings
                 'page_title' => 'Site Settings',
                 'menu_title' => 'Site Settings',
                 'menu_slug'  => self::ID,
-                'capability' => 'manage_options',
+                'capability' => apply_filters('acf/sitesettings/capability', 'manage_options'),
                 'redirect'   => true,
             ));
         }
