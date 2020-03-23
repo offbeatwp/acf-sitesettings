@@ -62,6 +62,7 @@ class SiteSettings extends AbstractSiteSettings
                 'menu_title'  => $title,
                 'parent_slug' => self::ID,
                 'menu_slug'   => $subMenuSlug,
+                'capability' => apply_filters('acf/sitesettings/capability', 'manage_options'),
             ]);
 
             if (method_exists($pageConfig, 'form')) {
