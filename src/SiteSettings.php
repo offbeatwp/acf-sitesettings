@@ -2,6 +2,7 @@
 namespace OffbeatWP\AcfSiteSettings;
 
 use OffbeatWP\AcfCore\FieldsMapper;
+use OffbeatWP\Content\Post\PostModel;
 use OffbeatWP\SiteSettings\AbstractSiteSettings;
 
 class SiteSettings extends AbstractSiteSettings
@@ -9,36 +10,6 @@ class SiteSettings extends AbstractSiteSettings
     const ID = 'site-settings';
 
     protected $settings;
-
-    public function register()
-    {
-        if (function_exists('acf_add_options_page')) {
-            acf_add_options_page(array(
-                'page_title' => __('Site Settings', 'offbeatwp'),
-                'menu_title' => __('Site Settings', 'offbeatwp'),
-                'menu_slug'  => self::ID,
-                'capability' => apply_filters('acf/sitesettings/capability', 'manage_options'),
-                'redirect'   => true,
-            ));
-        }
-
-        add_filter('acf/format_value/type=relationship', [$this, 'convertPostObject'], 99, 3);
-
-        add_action('acf/init', [$this, 'registerAcfSiteSettings']);
-    }
-
-    public function convertPostObject($value, $post_id, $field)
-    {
-        if ($field['return_format'] != 'object' || empty($value)) {
-            return $value;
-        }
-
-        foreach ($value as &$postObject) {
-            $postObject = offbeat('post')->get($postObject);
-        }
-
-        return $value;
-    }
 
     public function addPage($class)
     {
@@ -165,10 +136,5 @@ class SiteSettings extends AbstractSiteSettings
     public function update($key, $value)
     {
         return update_field($key, $value, 'option');
-    }
-
-    public function registerAcfSiteSettings()
-    {
-        do_action('acf_site_settings');
     }
 }
