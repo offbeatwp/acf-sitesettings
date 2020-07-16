@@ -21,11 +21,22 @@ class Service extends AbstractService {
             ));
 
             add_action('acf/init', [$this, 'registerAcfSiteSettings']);
+
+            add_action('acf/save_post', [$this, 'clearSiteSettingsTransients'], 10);
         }
     }
 
     public function registerAcfSiteSettings()
     {
         do_action('acf_site_settings');
+    }
+
+    public function clearSiteSettingsTransients()
+    {
+        $screen = get_current_screen();
+
+        if (strpos($screen->id, '_site-settings-') == true) {
+            delete_transient('site_settings');
+        }
     }
 }

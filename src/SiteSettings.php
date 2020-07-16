@@ -94,8 +94,14 @@ class SiteSettings extends AbstractSiteSettings
 
     public function fetchSettings()
     {
+        if ($siteSettings = get_transient('site_settings')) {
+            return $siteSettings;
+        }
+
         $settings = (array) get_fields('option');
         $settings = $this->normalizeSettings($settings);
+
+        set_transient('site_settings', $settings);
 
         return $settings;
     }
