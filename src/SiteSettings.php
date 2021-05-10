@@ -79,14 +79,19 @@ class SiteSettings extends AbstractSiteSettings
             $return = $settings[$key];
         } elseif (strpos($key, '.') !== false) {
             foreach (explode('.', $key) as $var) {
-                if (isset($settings[$var])) {
-                    $settings = $settings[$var];
+                $dottedSettings = $settings;
+                if (isset($dottedSettings[$var])) {
+                    $dottedSettings = $dottedSettings[$var];
                 } else {
-                    return null;
+                    $dottedSettings = null;
                 }
             }
 
-            $return = $settings;
+            $return = $dottedSettings;
+        }
+
+        if (!current_filter('acf/site_settings/get')) {
+            $return = apply_filters('acf/site_settings/get', $return, $key, $settings);
         }
 
         return $return;
