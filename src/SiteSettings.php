@@ -90,8 +90,8 @@ class SiteSettings extends AbstractSiteSettings
             $return = $dottedSettings;
         }
 
-        if (!current_filter('acf/site_settings/get')) {
-            $return = apply_filters('acf/site_settings/get', $return, $key, $settings);
+        if (!current_filter('offbeatwp/sitesettings/get')) {
+            $return = apply_filters('offbeatwp/sitesettings/get', $return, $key, $settings);
         }
 
         return $return;
