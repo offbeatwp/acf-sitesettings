@@ -78,8 +78,9 @@ class SiteSettings extends AbstractSiteSettings
         if (isset($settings[$key])) {
             $return = $settings[$key];
         } elseif (strpos($key, '.') !== false) {
+            $dottedSettings = $settings;
+
             foreach (explode('.', $key) as $var) {
-                $dottedSettings = $settings;
                 if (isset($dottedSettings[$var])) {
                     $dottedSettings = $dottedSettings[$var];
                 } else {
