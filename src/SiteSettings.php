@@ -2,19 +2,19 @@
 namespace OffbeatWP\AcfSiteSettings;
 
 use OffbeatWP\AcfCore\FieldsMapper;
-use OffbeatWP\Content\Post\PostModel;
+use OffbeatWP\Form\Form;
 use OffbeatWP\SiteSettings\AbstractSiteSettings;
 
 class SiteSettings extends AbstractSiteSettings
 {
-    const ID = 'site-settings';
+    public const ID = 'site-settings';
 
     protected $settings;
 
     public function addPage($class)
     {
         if (!class_exists($class) || !function_exists('acf_add_options_sub_page')) {
-            return null;
+            return;
         }
 
         $pageConfig = container()->make($class);
@@ -24,7 +24,7 @@ class SiteSettings extends AbstractSiteSettings
             $priority = $class::PRIORITY;
         }
 
-        add_action('acf_site_settings', function () use ($pageConfig, $class) {
+        add_action('acf_site_settings', static function () use ($pageConfig) {
             $title       = $pageConfig->title();
             $subMenuSlug = self::ID . '-' . $pageConfig::ID;
 
@@ -39,11 +39,11 @@ class SiteSettings extends AbstractSiteSettings
             if (method_exists($pageConfig, 'form')) {
                 $form = $pageConfig->form();
 
-                if ($form instanceof \OffbeatWP\Form\Form) {
+                if ($form instanceof Form) {
                     $fieldsMapper = new FieldsMapper($form);
                     $mappedFields = $fieldsMapper->map();
 
-                    acf_add_local_field_group(array(
+                    acf_add_local_field_group([
                         'key'                   => 'group_' . str_replace(' ', '_', strtolower($title)),
                         'title'                 => $title,
                         'fields'                => $mappedFields,
@@ -62,12 +62,11 @@ class SiteSettings extends AbstractSiteSettings
                         'label_placement'       => 'top',
                         'instruction_placement' => 'label',
                         'active'                => 1,
-                    ));
+                    ]);
                 }
             }
 
         }, $priority);
-
     }
 
     public function get($key)
@@ -81,16 +80,13 @@ class SiteSettings extends AbstractSiteSettings
             $dottedSettings = $settings;
 
             foreach (explode('.', $key) as $var) {
-                if (isset($dottedSettings[$var])) {
-                    $dottedSettings = $dottedSettings[$var];
-                } else {
-                    $dottedSettings = null;
-                }
+                $dottedSettings = $dottedSettings[$var] ?? null;
             }
 
             $return = $dottedSettings;
         }
 
+        // TODO: Is this working as intended? Looks like current_filter does not accept any parameters.
         if (!current_filter('offbeatwp/sitesettings/get')) {
             $return = apply_filters('offbeatwp/sitesettings/get', $return, $key, $settings);
         }
@@ -122,13 +118,8 @@ class SiteSettings extends AbstractSiteSettings
                     continue;
                 }
 
-                switch ($field['type']) {
-                    case 'group':
-                        if (is_array($settings[$settingKey])) {
-                            $settings = array_merge($settings, $settings[$settingKey]);
-                        }
-
-                        break;
+                if ($field['type'] === 'group' && is_array($settings[$settingKey])) {
+                    $settings = array_merge($settings, $settings[$settingKey]);
                 }
             }
         }
