@@ -9,11 +9,21 @@ class SiteSettings extends AbstractSiteSettings
 {
     public const ID = 'site-settings';
 
+    /** @var array */
     protected $settings;
 
+    /**
+     * @param class-string $class
+     * @return void
+     */
     public function addPage($class)
     {
-        if (!class_exists($class) || !function_exists('acf_add_options_sub_page')) {
+        if (!function_exists('acf_add_options_sub_page')) {
+            return;
+        }
+
+        if (!class_exists($class)) {
+            trigger_error('Could not add SiteSetting ' . static::ID . ' because class ' . $class . ' could not be found.', E_USER_WARNING);
             return;
         }
 
@@ -69,6 +79,10 @@ class SiteSettings extends AbstractSiteSettings
         }, $priority);
     }
 
+    /**
+     * @param string $key
+     * @return mixed
+     */
     public function get($key)
     {
         $return   = null;
@@ -94,13 +108,14 @@ class SiteSettings extends AbstractSiteSettings
         return $return;
     }
 
+    /** @return array */
     public function fetchSettings()
     {
         if ($siteSettings = get_transient('site_settings')) {
             return $siteSettings;
         }
 
-        $settings = (array) get_fields('option');
+        $settings = (array)get_fields('option');
         $settings = $this->normalizeSettings($settings);
 
         set_transient('site_settings', $settings);
@@ -136,6 +151,11 @@ class SiteSettings extends AbstractSiteSettings
         return $this->settings;
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return bool
+     */
     public function update($key, $value)
     {
         return update_field($key, $value, 'option');
