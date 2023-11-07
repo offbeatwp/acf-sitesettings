@@ -94,6 +94,11 @@ final class SiteOptions extends SiteSettings
      */
     public function normalizeSettings($settings): array
     {
-        return $settings;
+        $normalizedSettings = [];
+        foreach (self::$keys as $key) {
+            $normalizedSettings[$key] = $settings['options_' . $key];
+        }
+
+        return $normalizedSettings;
     }
 }
