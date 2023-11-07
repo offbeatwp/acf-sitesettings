@@ -80,9 +80,7 @@ final class SiteOptions extends SiteSettings
             return $siteSettings;
         }
 
-        $settings = get_options(SiteOptions::$keys);
-        $settings = $this->normalizeSettings($settings);
-
+        $settings = $this->normalizeSettings(get_options(SiteOptions::$keys));
         set_transient('site_settings', $settings);
 
         return $settings;
