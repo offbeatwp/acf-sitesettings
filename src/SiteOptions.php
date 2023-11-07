@@ -99,4 +99,14 @@ final class SiteOptions extends SiteSettings
 
         return $normalizedSettings;
     }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return bool
+     */
+    public function update($key, $value): bool
+    {
+        return update_option($key, $value);
+    }
 }
