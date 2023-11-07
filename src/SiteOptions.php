@@ -90,7 +90,7 @@ final class SiteOptions extends SiteSettings
      * @param mixed[] $settings
      * @return mixed[]
      */
-    public function normalizeSettings($settings): array
+    public function normalizeSettings(array $settings): array
     {
         $normalizedSettings = [];
         foreach (self::$keys as $key) {

@@ -129,15 +129,11 @@ class SiteSettings extends AbstractSiteSettings
     public function normalizeSettings($settings)
     {
         if (is_array($settings)) {
-            foreach ($settings as $settingKey => $setting) {
+            foreach ($settings as $settingKey => $settingValue) {
                 $field = get_field_object($settingKey, 'option');
 
-                if (!$field) {
-                    continue;
-                }
-
-                if ($field['type'] === 'group' && is_array($settings[$settingKey])) {
-                    $settings = array_merge($settings, $settings[$settingKey]);
+                if ($field && $field['type'] === 'group' && is_array($settingValue)) {
+                    $settings = array_merge($settings, $settingValue);
                 }
             }
         }
