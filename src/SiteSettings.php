@@ -2,6 +2,7 @@
 namespace OffbeatWP\AcfSiteSettings;
 
 use OffbeatWP\AcfCore\FieldsMapper;
+use OffbeatWP\Contracts\ISettingsPage;
 use OffbeatWP\Form\Form;
 use OffbeatWP\SiteSettings\AbstractSiteSettings;
 
@@ -9,11 +10,11 @@ class SiteSettings extends AbstractSiteSettings
 {
     public const ID = 'site-settings';
 
-    /** @var array */
+    /** @var mixed[] */
     protected $settings;
 
     /**
-     * @param class-string $class
+     * @param class-string<ISettingsPage> $class
      * @return void
      */
     public function addPage($class)
@@ -27,6 +28,7 @@ class SiteSettings extends AbstractSiteSettings
             return;
         }
 
+        /** @var ISettingsPage $pageConfig */
         $pageConfig = container()->make($class);
 
         $priority = 10;
@@ -108,10 +110,11 @@ class SiteSettings extends AbstractSiteSettings
         return $return;
     }
 
-    /** @return array */
+    /** @return mixed[] */
     public function fetchSettings()
     {
-        if ($siteSettings = get_transient('site_settings')) {
+        $siteSettings = get_transient('site_settings');
+        if ($siteSettings) {
             return $siteSettings;
         }
 
@@ -142,6 +145,7 @@ class SiteSettings extends AbstractSiteSettings
         return $settings;
     }
 
+    /** @return mixed[] */
     public function getSettings()
     {
         if (!$this->settings) {
