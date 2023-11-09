@@ -3,8 +3,8 @@ namespace OffbeatWP\AcfSiteSettings;
 
 use OffbeatWP\AcfCore\FieldsMapper;
 use OffbeatWP\Contracts\ISettingsPage;
-use OffbeatWP\Form\Form;
 use OffbeatWP\SiteSettings\AbstractSiteSettings;
+use InvalidArgumentException;
 
 /** Requires WordPress <b>6.4</b> or later */
 final class SiteSettings extends AbstractSiteSettings
@@ -25,9 +25,9 @@ final class SiteSettings extends AbstractSiteSettings
         }
 
         $pageConfig = container()->make($class);
-        if (!$pageConfig instanceof ISettingsPage) {
-            throw new InvalidArgumentException('Class ' . $class . ' does not implement ISettingsPage.');
-        }
+//        if (!$pageConfig instanceof ISettingsPage) {
+//            throw new InvalidArgumentException('Class ' . $class . ' does not implement ISettingsPage.');
+//        }
 
         foreach ($pageConfig->form()->keys() as $key) {
             SiteOptions::$keys[] = 'options_' . $key;
@@ -134,7 +134,7 @@ final class SiteSettings extends AbstractSiteSettings
     }
 
     /** @return mixed[] */
-    public function getSettings()
+    public function getSettings(): array
     {
         if (!$this->settings) {
             $this->settings = $this->fetchSettings();
