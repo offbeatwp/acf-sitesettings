@@ -113,7 +113,7 @@ class SiteSettings extends AbstractSiteSettings
     /** @return mixed[] */
     public function fetchSettings()
     {
-        $siteSettings = get_transient('site_settings_' . get_current_blog_id());
+        $siteSettings = get_transient('site_settings');
         if ($siteSettings) {
             return $siteSettings;
         }
@@ -121,7 +121,7 @@ class SiteSettings extends AbstractSiteSettings
         $settings = (array)get_fields('option');
         $settings = $this->normalizeSettings($settings);
 
-        set_transient('site_settings_' . get_current_blog_id(), $settings);
+        set_transient('site_settings', $settings);
 
         return $settings;
     }
