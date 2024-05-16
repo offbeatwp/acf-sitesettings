@@ -10,8 +10,8 @@ class SiteSettings extends AbstractSiteSettings
 {
     public const ID = 'site-settings';
 
-    /** @var mixed[] */
-    protected $settings;
+    /** @var array<int, mixed[]> */
+    protected $settings = [];
 
     /**
      * @param class-string<ISettingsPage> $class
@@ -148,11 +148,13 @@ class SiteSettings extends AbstractSiteSettings
     /** @return mixed[] */
     public function getSettings()
     {
-        if (!$this->settings) {
-            $this->settings = $this->fetchSettings();
+        $id = get_current_blog_id();
+
+        if (!$this->settings[$id]) {
+            $this->settings[$id] = $this->fetchSettings();
         }
 
-        return $this->settings;
+        return $this->settings[$id];
     }
 
     /**
