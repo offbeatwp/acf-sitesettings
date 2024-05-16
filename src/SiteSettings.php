@@ -150,7 +150,7 @@ class SiteSettings extends AbstractSiteSettings
     {
         $id = get_current_blog_id();
 
-        if (!$this->settings[$id]) {
+        if (!array_key_exists($id, $this->settings)) {
             $this->settings[$id] = $this->fetchSettings();
         }
 
