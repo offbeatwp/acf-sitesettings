@@ -118,6 +118,11 @@ class SiteSettings extends AbstractSiteSettings
             return $siteSettings;
         }
 
+        if (!function_exists('get_fields')) {
+            error_log('Unable to get SiteSettings; The get_fields function is not defined.', E_USER_WARNING);
+            return [];
+        }
+
         $settings = (array)get_fields('option');
         $settings = $this->normalizeSettings($settings);
 
@@ -126,6 +131,7 @@ class SiteSettings extends AbstractSiteSettings
         return $settings;
     }
 
+    /** @interal */
     public function normalizeSettings($settings)
     {
         if (is_array($settings)) {
